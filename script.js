@@ -1,6 +1,7 @@
 const classOl = document.querySelector('.cart__items');
 const body = document.querySelector('body');
 const classItens = document.querySelector('.items');
+const itemsCart = document.getElementsByClassName('empty-cart');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -74,7 +75,7 @@ async function updateLocalStorage() {
 const createProductCart = async (id) => {
   const itemId = await fetchSearchId(id);
   classOl.appendChild(createCartItemElement(itemId));
-  await updateLocalStorage();
+  updateLocalStorage();
 };
 
 // Adiciona Item no carrinho. Referencia da ajuda que encontrei, no final  da pagina.
@@ -88,6 +89,18 @@ const addProductCart = () => {
 };
 
 addProductCart();
+// Limpa o carrinho de compras. Referencia da ajuda que tive no final da pagina
+const clearCart = () => {
+  body.addEventListener('click', (event) => {
+    const clickElement = event.target;
+      if (clickElement.className === 'empty-cart') {
+        classOl.innerText = '';
+      }
+  });
+};
+
+clearCart();
+
 // Captura os items salvos no localStorage ao carregar a pagina
 function reloadStorage() {
   const itemStorage = localStorage.getItem('Cart');
@@ -96,10 +109,15 @@ function reloadStorage() {
   }
 }
 
+reloadStorage();
+
 window.onload = async () => {
    await elementComputerSection(); 
-   await reloadStorage();
 };
 
 // segundo Requisito: https://www.youtube.com/watch?v=LEtLtRXBDms&t=492s
 // https://www.youtube.com/watch?v=9bWDK5oltiI.
+
+// Limpa carrinho: https://pt.stackoverflow.com/questions/441373/
+// como-remover-todos-os-elementos-de-uma-div-em-javascript#:~:text=Para%20remover%20de%20uma%20s%C3%B3,
+// do%20elemento%20pelo%20valor%20fornecido.
