@@ -1,6 +1,6 @@
+const classItens = document.querySelector('.items');
 const classOl = document.querySelector('.cart__items');
 const body = document.querySelector('body');
-const classItens = document.querySelector('.items');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
