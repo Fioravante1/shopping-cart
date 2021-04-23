@@ -47,7 +47,7 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
 
 // Cria o loading antes da promisse ser resolvida
 const createLoading = () => {
-  body.appendChild(createCustomElement('p', 'loading', 'Loading...'));
+  body.appendChild(createCustomElement('p', 'loading', 'Carregando...'));
 };
 
 // Remove o loading depopois da promesse ser resolvida
