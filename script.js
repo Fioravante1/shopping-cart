@@ -88,6 +88,17 @@ const addProductCart = () => {
 };
 
 addProductCart();
+
+// Captura os items salvos no localStorage ao carregar a pagina
+function reloadStorage() {
+  const itemStorage = localStorage.getItem('Cart');
+  if (itemStorage) {
+    classOl.innerHTML = itemStorage;
+  }
+}
+
+reloadStorage();
+
 // Limpa o carrinho de compras. Referencia da ajuda que tive no final da pagina
 const clearCart = () => {
   body.addEventListener('click', (event) => {
@@ -99,16 +110,6 @@ const clearCart = () => {
 };
 
 clearCart();
-
-// Captura os items salvos no localStorage ao carregar a pagina
-function reloadStorage() {
-  const itemStorage = localStorage.getItem('Cart');
-  if (itemStorage) {
-    classOl.innerHTML = itemStorage;
-  }
-}
-
-reloadStorage();
 
 window.onload = async () => {
    await elementComputerSection(); 
