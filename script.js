@@ -31,6 +31,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
+
 // Remove o item do carrinho ao clicar nele. https://developer.mozilla.org/pt-BR/docs/Web/API/ChildNode/remove
 async function cartItemClickListener(event) {
    event.target.remove();
@@ -43,6 +44,18 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+// Cria o loading antes da promisse ser resolvida
+const createLoading = () => {
+  body.appendChild(createCustomElement('p', 'loading', 'Loading...'));
+};
+
+// Remove o loading depopois da promesse ser resolvida
+const removeLoading = () => {
+  const pLoanding = document.querySelector('.loading');
+  body.removeChild(pLoanding);
+};
+
 // Faz a requisição para a API
 const apiUrl = async (item) => {
   const URL = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${item}`);
@@ -50,6 +63,7 @@ const apiUrl = async (item) => {
   const listComputer = await docJson.results;
   return listComputer;
 };
+
 // Adiciona o elemento buscado (computador) como filho da section com a classe items
 const elementComputerSection = async () => {
   const list = await apiUrl('computador');
@@ -58,18 +72,20 @@ const elementComputerSection = async () => {
       classItens.appendChild(computers);
   });
 };
+
 // Faz a requisição na API pelo id
 const fetchSearchId = async (id) => {
   const productId = await fetch(`https://api.mercadolibre.com/items/${id}`);
   const response = await productId.json();
-  console.log(response);
   return response;
 };
+
 // Salva os items do carrinho no localStorage.Referencia https://www.youtube.com/watch?v=hNTozXl-qJA. Me inspirei no codigo do Emerson.
 async function updateLocalStorage() {
   const item = document.querySelector('.cart__items');
   await localStorage.setItem('Cart', item.innerHTML);
 }
+
 // Cria o item a ser adicionado no carrinho. Codigo ajustado com a ajuda de Herique Clementino.
 const createProductCart = async (id) => {
   const itemId = await fetchSearchId(id);
@@ -112,7 +128,9 @@ const clearCart = () => {
 clearCart();
 
 window.onload = async () => {
+   createLoading();
    await elementComputerSection(); 
+   removeLoading();
 };
 
 // segundo Requisito: https://www.youtube.com/watch?v=LEtLtRXBDms&t=492s
