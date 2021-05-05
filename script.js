@@ -32,7 +32,7 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-// Tive ajuda do Emerson Saturnino e Herique Clementino para fazer o requisito de soma.
+// Tive ajuda do Emerson Saturnino e Henrique Clementino para fazer o requisito de soma.
 const sum = async () => {
   let initNumber = 0;
   const textoPrice = document.querySelector('.total-price');
