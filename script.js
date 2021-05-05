@@ -1,6 +1,6 @@
 const classItens = document.querySelector('.items');
 const classOl = document.querySelector('.cart__items');
-const body = document.querySelector('body');
+const body = document.querySelector('body'); 
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -19,12 +19,12 @@ function createCustomElement(element, className, innerText) {
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
+  
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
+  
   return section;
 }
 
@@ -32,9 +32,22 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+// Tive ajuda do Emerson Saturnino e Herique Clementino para fazer o requisito de soma.
+const sum = async () => {
+  let initNumber = 0;
+  const textoPrice = document.querySelector('.total-price');
+  const arrayCart = document.querySelectorAll('.cart__item');
+    arrayCart.forEach((value) => {
+      const convertNumber = value.innerText.split('$')[1];
+      initNumber += parseFloat(convertNumber);
+    });
+    textoPrice.innerText = initNumber;
+};
+
 // Remove o item do carrinho ao clicar nele. https://developer.mozilla.org/pt-BR/docs/Web/API/ChildNode/remove
 async function cartItemClickListener(event) {
    event.target.remove();
+   sum();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -50,7 +63,7 @@ const createLoading = () => {
   body.appendChild(createCustomElement('p', 'loading', 'Carregando...'));
 };
 
-// Remove o loading depopois da promesse ser resolvida
+// Remove o loading depois da promise ser resolvida
 const removeLoading = () => {
   const pLoanding = document.querySelector('.loading');
   body.removeChild(pLoanding);
@@ -80,21 +93,22 @@ const fetchSearchId = async (id) => {
   return response;
 };
 
-// Salva os items do carrinho no localStorage.Referencia https://www.youtube.com/watch?v=hNTozXl-qJA. Me inspirei no codigo do Emerson.
-async function updateLocalStorage() {
+// Salva os items do carrinho no localStorage.Referencia https://www.youtube.com/watch?v=hNTozXl-qJA. 
+const updateLocalStorage = async () => {
   const item = document.querySelector('.cart__items');
   await localStorage.setItem('Cart', item.innerHTML);
-}
+};
 
 // Cria o item a ser adicionado no carrinho. Codigo ajustado com a ajuda de Herique Clementino.
 const createProductCart = async (id) => {
   const itemId = await fetchSearchId(id);
   classOl.appendChild(createCartItemElement(itemId));
   updateLocalStorage();
+  await sum();
 };
 
 // Adiciona Item no carrinho. Referencia da ajuda que encontrei, no final  da pagina.
-const addProductCart = () => {
+const addProductCart = async () => {
    body.addEventListener('click', (event) => {
     const clickElement = event.target;
       if (clickElement.className === 'item__add') {
@@ -105,13 +119,14 @@ const addProductCart = () => {
 
 addProductCart();
 
-// Captura os items salvos no localStorage ao carregar a pagina
-function reloadStorage() {
+// Captura os items salvos no localStorage ao carregar a pagina. Esse codico construi com ajuda do codigo do Emerson.
+const reloadStorage = () => {
   const itemStorage = localStorage.getItem('Cart');
   if (itemStorage) {
     classOl.innerHTML = itemStorage;
+    sum();
   }
-}
+};
 
 reloadStorage();
 
@@ -121,6 +136,8 @@ const clearCart = () => {
     const clickElement = event.target;
       if (clickElement.className === 'empty-cart') {
         classOl.innerText = '';
+        localStorage.clear();
+        sum();
       }
   });
 };
